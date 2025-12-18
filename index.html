@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Library Management System</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>Library Management System</h1>
+      </header>
+      <main id="app">
+        <!-- Landing Page -->
+        <section id="landing-page">
+          <div class="landing-container">
+            <div class="landing-header">
+              <h1 id="dynamic-greeting">Library Management System</h1>
+              <p>Choose your portal to access the library system.</p>
+            </div>
+            
+            <div class="portal-cards">
+              <div class="portal-card" data-url="student-login.html">
+                <div class="portal-icon" style="background-image: url('https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=200&q=80'); background-size: cover; background-position: center;">
+                </div>
+                <h3>Student Portal</h3>
+              </div>
+
+              <div class="portal-card" data-url="member-login.html">
+                <div class="portal-icon" style="background-image: url('https://images.unsplash.com/photo-1573164713988-8665fc963095?auto=format&fit=crop&w=200&q=80'); background-size: cover; background-position: center;">
+                </div>
+                <h3>Faculty Portal</h3>
+              </div>
+
+              <div class="portal-card" data-url="admin-login.html">
+                <div class="portal-icon" style="background: url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=200&q=80') center/cover no-repeat;">
+                </div>
+                <h3>Admin Portal</h3>
+              </div>
+            </div>
+
+            
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="app.js"></script>
+    <script src="global-buttons.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        document.querySelectorAll(".portal-card").forEach(card => {
+          card.addEventListener("click", () => {
+            const url = card.dataset.url;
+            if (url) window.location.href = url;
+          });
+        });
+
+        const greetingH1 = document.getElementById("dynamic-greeting");
+        if (greetingH1) {
+            const hour = new Date().getHours();
+            let greeting;
+            if (hour < 12) {
+                greeting = "Good Morning";
+            } else if (hour < 18) {
+                greeting = "Good Afternoon";
+            } else {
+                greeting = "Good Evening";
+            }
+            greetingH1.textContent = `${greeting}, Welcome to the Library`;
+        }
+      });
+    </script>
+    <!-- Custom Popup -->
+    <div id="customPopup" class="custom-popup">
+        <div class="popup-content">
+            <span class="close-popup" onclick="hidePopup()">&times;</span>
+            <p id="popupMessage"></p>
+        </div>
+    </div>
+  </body>
+</html>

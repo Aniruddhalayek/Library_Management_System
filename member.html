@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Faculty Portal - Library Management System</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <link rel="stylesheet" href="style.css" />
+    <style>
+      /* Custom Modal Styles */
+      .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.6);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+        transition: opacity 0.3s ease;
+      }
+      .modal-overlay.hidden {
+        display: none;
+      }
+      .modal-content {
+        background: #fff;
+        padding: 24px;
+        border-radius: 8px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        width: 90%;
+        max-width: 500px;
+        animation: slide-down 0.3s ease-out;
+      }
+      @keyframes slide-down {
+        from {
+          transform: translateY(-30px);
+          opacity: 0;
+        }
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+      .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 16px;
+        margin-bottom: 16px;
+      }
+      .modal-header h3 {
+        margin: 0;
+        font-size: 1.25rem;
+      }
+      .modal-close {
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        cursor: pointer;
+        color: #888;
+      }
+      .modal-body {
+        margin-bottom: 24px;
+      }
+      .modal-footer {
+        display: flex;
+        justify-content: flex-end;
+        gap: 8px;
+      }
+      .modal-form {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+      .modal-form input, .modal-form label {
+        width: 100%;
+        padding: 8px;
+        font-size: 1rem;
+      }
+      .modal-form input[type="date"] {
+        padding: 7px;
+      }
+      .details-view {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+      .details-item {
+        display: flex;
+        gap: 8px;
+        font-size: 1rem;
+      }
+      .details-item label {
+        font-weight: 600;
+        color: #374151;
+        width: 120px;
+        flex-shrink: 0;
+      }
+      .details-list {
+        max-height: 150px;
+        overflow-y: auto;
+        border-top: 1px solid #eee;
+        padding-top: 12px;
+      }
+      .details-list-item {
+        padding: 6px 0;
+        border-bottom: 1px solid #f3f4f6;
+      }
+      /* Toolbar alignment for right-side buttons */
+      .toolbar {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        gap: 0;
+      }
+      .toolbar .actions {
+        display: flex;
+        gap: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>Faculty Portal</h1>
+      </header>
+
+      <main id="app">
+        <!-- Faculty Dashboard -->
+        <section id="dash">
+          <div class="toolbar">
+            <div class="actions">
+              <button id="backToHomeBtn" class="secondary">🏠 Back to Home</button>
+              <button id="logoutBtn">Logout</button>
+            </div>
+          </div>
+
+          <!-- Main Navigation Cards -->
+          <div class="main-cards">
+            <div class="nav-card" id="navBooks" onclick="setActiveDashboardPage('page-books')">
+              <div class="nav-icon">
+                <div class="icon-circle">
+                  <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+                  </svg>
+                </div>
+                <div class="icon-label">BOOKS</div>
+              </div>
+              <h3>Book Management</h3>
+              
+            </div>
+
+            <div class="nav-card" id="navCirculation" onclick="setActiveDashboardPage('page-circulation')">
+              <div class="nav-icon">
+                <div class="icon-circle">
+                  <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/>
+                  </svg>
+                </div>
+                <div class="icon-label">CIRCULATION</div>
+              </div>
+              <h3>Circulation & Reports</h3>
+            </div>
+
+            <div class="nav-card" id="navAccount" onclick="setActiveDashboardPage('page-account')">
+              <div class="nav-icon">
+                <div class="icon-circle">
+                  <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                  </svg>
+                </div>
+                <div class="icon-label">ACCOUNT</div>
+              </div>
+              <h3>My Faculty Account</h3>
+            </div>
+          </div>
+
+          <!-- Page 1: Book Management -->
+          <section id="page-books">
+            <div class="card">
+              <h3>Book Management</h3>
+              <div class="row">
+                <input
+                  id="bookSearch"
+                  placeholder="Search by title, author, accession, isbn"
+                />
+                <button id="btnSearchBooks">Search</button>
+                <button id="btnAddBook">Add Book</button>
+              </div>
+              <div id="booksList"></div>
+            </div>
+          </section>
+
+          <!-- Page 2: Circulation, Search & Reports -->
+          <section id="page-circulation" class="hidden">
+            <div class="grid">
+              <div class="card">
+                <h3>Issue / Return</h3>
+                <div class="row">
+                  <select id="issueBookSelect"></select>
+                  <select id="issueMemberSelect"></select>
+                </div>
+                <div class="row">
+                  <input id="issueDate" type="date" />
+                  <input id="dueDate" type="date" />
+                  <button id="btnIssue">Issue Book</button>
+                </div>
+                <h4>Recent Issues</h4>
+                <div id="recentIssues"></div>
+              </div>
+
+              <div class="card">
+                <h3>Reports</h3>
+                <button id="btnOverdue">Show Overdue</button>
+                <div id="reportArea"></div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Page 3: Account Details -->
+          <section id="page-account" class="hidden">
+            <div class="card">
+              <h3>👤 My Account</h3>
+              <div class="account-info">
+                <div class="info-item">
+                  <label>Full Name:</label>
+                  <span id="accountName"></span>
+                </div>
+                <div class="info-item">
+                  <label>Faculty ID:</label>
+                  <span id="accountMemberId"></span>
+                </div>
+                <div class="info-item">
+                  <label>Username:</label>
+                  <span id="accountUsername"></span>
+                </div>
+                <div class="info-item">
+                  <label>Email:</label>
+                  <span id="accountEmail"></span>
+                </div>
+                <div class="info-item">
+                  <label>Role:</label>
+                  <span id="accountRole"></span>
+                </div>
+              </div>
+            </div>
+          </section>
+        </section>
+      </main>
+    </div>
+
+    
+    
+    <!-- Custom Modal -->
+    <div id="customModal" class="modal-overlay hidden">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 id="modalTitle"></h3>
+          <button id="modalCloseBtn" class="modal-close">&times;</button>
+        </div>
+        <div id="modalBody" class="modal-body">
+          <!-- Dynamic content goes here -->
+        </div>
+        <div class="modal-footer">
+          <button id="modalCancelBtn" class="secondary">Cancel</button>
+          <button id="modalSaveBtn">Save</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="app.js"></script>
+    <script src="global-buttons.js"></script>
+    <script>
+      // Ensure critical buttons work even if other scripts error
+      document.addEventListener("DOMContentLoaded", () => {
+        // 1) Wire toolbar buttons first
+        const backBtn = document.getElementById("backToHomeBtn");
+        if (backBtn) backBtn.addEventListener("click", () => { window.location.href = "./index.html"; });
+
+        const logoutBtn = document.getElementById("logoutBtn");
+        if (logoutBtn) logoutBtn.addEventListener("click", () => {
+          try { localStorage.removeItem("lms_current_user"); } catch (e) {}
+          window.location.href = "./index.html";
+        });
+
+        // 2) Validate session
+        const storedUser = localStorage.getItem("lms_current_user");
+        if (!storedUser) {
+          window.location.href = "./member-login.html";
+          return;
+        }
+
+        try {
+          window.currentUser = JSON.parse(storedUser);
+        } catch (e) {
+          try { localStorage.removeItem("lms_current_user"); } catch (_) {}
+          window.location.href = "./member-login.html";
+          return;
+        }
+
+        if (currentUser.role !== 'faculty') {
+          window.location.href = 'index.html';
+          return;
+        }
+
+        // 3) Optional features guarded with try/catch
+        if (typeof window.showDashboard === 'function') {
+          try { window.showDashboard(); } catch (e) {}
+        }
+
+        if (typeof window.setupModal === 'function') {
+          try { window.setupModal(); } catch (e) {}
+        }
+        
+        // Wire core buttons (only if functions are available)
+        const btnSearchBooks = document.getElementById("btnSearchBooks");
+        if (btnSearchBooks && typeof window.loadBooks === 'function') btnSearchBooks.addEventListener("click", loadBooks);
+        const btnAddBook = document.getElementById("btnAddBook");
+        if (btnAddBook && typeof window.showAddBookModal === 'function') btnAddBook.addEventListener("click", showAddBookModal);
+        const btnIssue = document.getElementById("btnIssue");
+        if (btnIssue && typeof window.issueBook === 'function') btnIssue.addEventListener("click", issueBook);
+        const btnOverdue = document.getElementById("btnOverdue");
+        if (btnOverdue && typeof window.showOverdue === 'function') btnOverdue.addEventListener("click", showOverdue);
+
+        // Setup navigation safely
+        if (typeof window.setupDashboardNavigation === 'function') {
+          try { setupDashboardNavigation(); } catch (e) {}
+        }
+        const bookSearch = document.getElementById("bookSearch");
+        if (bookSearch && typeof window.loadBooks === 'function') {
+          bookSearch.addEventListener("keyup", (e) => {
+            if (e.key === "Enter") loadBooks();
+          });
+        }
+        if (typeof window.loadRecentIssues === 'function') {
+          try { loadRecentIssues(); } catch (e) {}
+        }
+      });
+    </script>
+  </body>
+</html>

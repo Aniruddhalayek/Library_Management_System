@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Login</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="login-page-container">
+        <div class="login-card-modern">
+            <h1>Student Login</h1>
+            <form id="studentLoginForm" class="login-form-modern">
+                <div class="form-group">
+                    <label for="studentIdInput">Student ID</label>
+                    <input type="text" id="studentIdInput" placeholder="Student ID (e.g., 1101)" required>
+                </div>
+                <div class="form-group">
+                    <label for="usernameInput">Username</label>
+                    <input type="text" id="usernameInput" placeholder="Username (e.g., arr)" required>
+                </div>
+                <div style="display: flex; gap: 10px; justify-content: center;">
+                    <button type="submit">Login</button>
+                    <button type="button" id="backToHomeBtn">Home</button>
+                </div>
+            </form>
+            </div>
+    </div>
+
+    <script src="app.js"></script>
+    <script src="global-buttons.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const studentLoginForm = document.getElementById("studentLoginForm");
+        const studentIdInput = document.getElementById("studentIdInput");
+        const usernameInput = document.getElementById("usernameInput");
+        const loginError = document.getElementById("loginError");
+        const backToHomeBtn = document.getElementById("backToHomeBtn");
+
+        studentLoginForm.addEventListener("submit", (e) => {
+          e.preventDefault();
+          const studentId = studentIdInput.value.trim();
+          const username = usernameInput.value.trim();
+
+          // Default login credentials
+          const defaultStudentId = "1101";
+          const defaultUsername = "arr";
+
+          if (studentId === defaultStudentId && username === defaultUsername) {
+            // Simulate fetching student data (can be expanded later)
+            const studentData = {
+              username: username,
+              fullname: "Student User", // Placeholder
+              role: "student",
+              studentId: studentId,
+              email: `${username}@university.edu`, // Placeholder
+              department: "Computer Science" // Placeholder
+            };
+            
+            localStorage.setItem("lms_current_student", JSON.stringify(studentData));
+            window.location.href = "student.html";
+          } else {
+            showPopup('Invalid Student ID or Username.');
+          }
+        });
+
+        backToHomeBtn.addEventListener("click", () => {
+          window.location.href = "./index.html";
+        });
+      });
+    </script>
+    <!-- Custom Popup -->
+    <div id="customPopup" class="custom-popup">
+        <div class="popup-content">
+            <span class="close-popup" onclick="hidePopup()">&times;</span>
+            <p id="popupMessage"></p>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Member Login</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="login-page-container">
+        <div class="login-card-modern">
+            <h1>Faculty Login</h1>
+            <form id="login-form" class="login-form-modern">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" placeholder="Username (e.g. faculty)" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" placeholder="Password (e.g. 1101)" required>
+                </div>
+                <div style="display: flex; gap: 10px; justify-content: center;">
+                    <button type="submit">Login</button>
+                    <button type="button" id="backToHomeBtn" class="secondary">Home</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    <script src="global-buttons.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const loginForm = document.getElementById("login-form");
+        const backToHomeBtn = document.getElementById("backToHomeBtn");
+
+        loginForm.addEventListener("submit", (e) => {
+          e.preventDefault();
+          const username = document.getElementById("username").value;
+          const password = document.getElementById("password").value;
+
+          if (username === 'faculty' && password === '1101') {
+            const facultyData = {
+                username: 'faculty',
+                fullname: 'Library Faculty',
+                role: 'faculty',
+                email: 'faculty@library.org',
+                memberId: 'FAC001'
+            };
+            localStorage.setItem('lms_current_user', JSON.stringify(facultyData));
+            window.location.href = 'member.html';
+          } else {
+            showPopup('Invalid username or password');
+          }
+        });
+
+        backToHomeBtn.addEventListener("click", () => {
+          window.location.href = "./index.html";
+        });
+      });
+    </script>
+    <!-- Custom Popup -->
+    <div id="customPopup" class="custom-popup">
+        <div class="popup-content">
+            <span class="close-popup" onclick="hidePopup()">&times;</span>
+            <p id="popupMessage"></p>
+        </div>
+    </div>
+</body>
+</html>
